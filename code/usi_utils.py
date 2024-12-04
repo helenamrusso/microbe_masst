@@ -14,7 +14,7 @@ def create_simple_file_usi(filename, dataset):
     return "mzspec:{}:{}".format(dataset, filename)
 
 
-def ensure_simple_file_usi(usi):
+def ensure_simple_file_usi(usi, extended=False):
     # remove scan, check only dataset and filename
     scan = str(usi).rfind(":scan")
     if scan > -1:
@@ -23,12 +23,14 @@ def ensure_simple_file_usi(usi):
         elements = usi.split(":")
     # only use filename instead of full path for matching
     filename = Path(elements[-1]).stem
-    return "mzspec:{}:{}".format(elements[1], filename)
+    if extended:
+        return "mzspec:{}:{}".format(elements[1], elements[2])
+    else:
+        return "mzspec:{}:{}".format(elements[1], filename)
 
 
 def create_file_usi_column(
-    df, original_usi_col="USI", dataset_col="MassIVE", filename_col="Filename"
-):
+    df, original_usi_col="USI", dataset_col="MassIVE", filename_col="Filename"):
     if original_usi_col in df.columns:
         df["file_usi"] = [ensure_simple_file_usi(usi) for usi in df[original_usi_col]]
     else:

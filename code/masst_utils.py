@@ -313,6 +313,11 @@ def extract_matches_from_masst_results(
         masst_df["file_usi"] = [
             usi_utils.ensure_simple_file_usi(usi) for usi in masst_df["USI"]
         ]
+
+        masst_df["file_usi_extended"] = [
+            usi_utils.ensure_simple_file_usi(usi, extended=True) for usi in masst_df["USI"]
+        ]
+
         masst_df = masst_df.sort_values(
             by=["Cosine", "Matching Peaks"], ascending=[False, False]
         ).drop_duplicates("file_usi")

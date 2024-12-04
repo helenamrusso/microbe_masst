@@ -150,12 +150,21 @@ def export_metadata_matches(
     else:
         metadata_df = pd.read_csv(metadata_file)
 
+
     # join on the file usi
-    results_df = pd.concat(
-        [matches_df.set_index("file_usi"), metadata_df.set_index("file_usi")],
-        axis=1,
-        join="inner",
-    ).reset_index()
+    if "plant" in metadata_file or "tissue" in metadata_file:
+        results_df = pd.concat(
+            [matches_df.set_index("file_usi_extended"), metadata_df.set_index("file_usi")],
+            axis=1,
+            join="inner",
+        ).reset_index()
+
+    else:
+        results_df = pd.concat(
+            [matches_df.set_index("file_usi"), metadata_df.set_index("file_usi")],
+            axis=1,
+            join="inner",
+        ).reset_index()
 
     # export file with ncbi, matched_size,
     if len(results_df) > 0:
